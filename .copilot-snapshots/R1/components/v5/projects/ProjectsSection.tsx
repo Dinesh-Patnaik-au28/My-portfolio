@@ -1,0 +1,106 @@
+"use client";
+
+import {useState,type CSSProperties,type PointerEvent as ReactPointerEvent} from "react";
+import {Check,MousePointer2} from "lucide-react";
+import ApplicationPreview from "../builder/ApplicationPreview";
+import EditspaceScene from "../editspace/EditspaceScene";
+import type {BuilderModuleId} from "../data";
+
+const appBuilderModules=[
+  {id:"navigation",label:"Shell",caption:"navigation"},
+  {id:"identity",label:"Identity",caption:"account state"},
+  {id:"commerce",label:"Flow",caption:"business logic"},
+  {id:"notifications",label:"Events",caption:"messaging"},
+] as const satisfies readonly {id:BuilderModuleId;label:string;caption:string}[];
+
+const webSections=["Header","Hero","Content","API","Page"];
+const editStages=["CAPTURE","RECONSTRUCT","UNDERSTAND","EDIT"];
+
+function AppBuilderProject(){
+  const [selected,setSelected]=useState<BuilderModuleId[]>(["navigation","identity"]);
+  const toggle=(id:BuilderModuleId)=>setSelected(current=>current.includes(id)?current.filter(item=>item!==id):[...current,id]);
+
+  return <article className="v5-project-card v5-project-app">
+    <div className="v5-project-copy">
+      <span>PROJECT 01 / APPLICATION BUILDER ENGINE</span>
+      <h3>Reusable application-building platform.</h3>
+      <p>A platform designed to create multiple applications around different business requirements from a shared foundation.</p>
+      <dl>
+        <div><dt>ROLE</dt><dd>Mobile engineering, reusable packages/components, Builder Studio workflows, builds and releases.</dd></div>
+        <div><dt>TECH</dt><dd>React Native · Expo · TypeScript · React · Zustand</dd></div>
+        <div><dt>INTERESTING</dt><dd>Different applications can be assembled from the same underlying system without rebuilding every piece.</dd></div>
+      </dl>
+    </div>
+    <div className="v5-project-builder-demo">
+      <div className="v5-project-windowbar"><span>BUILDER STUDIO / CONCEPT</span><b>{selected.length}/4 MODULES</b></div>
+      <div className="v5-project-module-list">{appBuilderModules.map(module=><button key={module.id} className={selected.includes(module.id)?"active":""} onClick={()=>toggle(module.id)}><i>{selected.includes(module.id)?<Check size={10}/>:"+"}</i><b>{module.label}</b><small>{module.caption}</small></button>)}</div>
+      <div className="v5-project-phone-stage"><ApplicationPreview modules={selected}/><div className="v5-project-selection"><span>APPLICATION PREVIEW</span></div></div>
+      <div className="v5-project-package-strip">{["UI PKG","STATE PKG","API PKG","RELEASE"].map(item=><span key={item}>{item}<i/></span>)}</div>
+    </div>
+  </article>;
+}
+
+function WebBuilderProject(){
+  const [active,setActive]=useState(2);
+  return <article className="v5-project-card v5-project-web">
+    <div className="v5-project-copy">
+      <span>PROJECT 02 / WEB BUILDER ENGINE</span>
+      <h3>Earlier full-stack builder foundation.</h3>
+      <p>Work at Attainu on a web-builder platform helped establish Dinesh’s Node.js and React product foundation.</p>
+      <dl>
+        <div><dt>ROLE</dt><dd>Full Stack Developer Intern working mainly with Node.js and React web.</dd></div>
+        <div><dt>TECH</dt><dd>Node.js · React</dd></div>
+        <div><dt>INTERESTING</dt><dd>Page, section and backend concepts came together as a builder-style product surface.</dd></div>
+      </dl>
+    </div>
+    <div className="v5-web-builder-demo">
+      <div className="v5-web-outline">
+        {webSections.map((item,index)=><button key={item} className={active===index?"active":""} onMouseEnter={()=>setActive(index)} onFocus={()=>setActive(index)} onClick={()=>setActive(index)}><span>0{index+1}</span><b>{item}</b></button>)}
+      </div>
+      <div className="v5-web-page-preview">
+        <div className={`v5-web-section section-${active}`}><small>{webSections[active].toUpperCase()} NODE</small><b>{active===3?"Express route":"Composable page block"}</b><p>{active===3?"Backend logic connects the builder to data." : "A page section moves from structure to preview."}</p></div>
+        <div className="v5-web-browser"><i/><i/><i/><span>/builder/page</span></div>
+        <div className="v5-web-wireframe"><i/><i/><i/><i/></div>
+      </div>
+    </div>
+  </article>;
+}
+
+function EditspaceProject(){
+  const [stage,setStage]=useState(1);
+  const [tilt,setTilt]=useState({x:0,y:0});
+  const move=(event:ReactPointerEvent<HTMLDivElement>)=>{const box=event.currentTarget.getBoundingClientRect();setTilt({x:(event.clientX-box.left)/box.width-.5,y:(event.clientY-box.top)/box.height-.5})};
+
+  return <article className="v5-project-card v5-project-edit">
+    <div className="v5-project-copy">
+      <span>PROJECT 03 / EDITSPACE — WHAT I’M BUILDING NOW</span>
+      <h3>Room capture to editable environments.</h3>
+      <p>An R&D direction exploring room capture, 3D reconstruction and editable spaces without presenting it as a finished product.</p>
+      <dl>
+        <div><dt>ROLE</dt><dd>Current experimentation across mobile capture, backend services, AI/computer vision and interactive 3D.</dd></div>
+        <div><dt>TECH</dt><dd>React Native · Expo · TypeScript · PyTorch · MASt3R · FastAPI · Uvicorn · Three.js · React Three Fiber</dd></div>
+        <div><dt>INTERESTING</dt><dd>The interface has to explain an uncertain 3D/AI pipeline in a way people can manipulate.</dd></div>
+      </dl>
+    </div>
+    <div className="v5-edit-project-demo" onPointerMove={move} style={{"--tilt-x":tilt.x,"--tilt-y":tilt.y} as CSSProperties}>
+      <EditspaceScene stage={stage}/>
+      <div className="v5-edit-project-controls">{editStages.map((item,index)=><button key={item} className={stage===index?"active":""} onClick={()=>setStage(index)}><span>0{index+1}</span>{item}</button>)}</div>
+    </div>
+  </article>;
+}
+
+export default function ProjectsSection(){
+  return <section id="projects" className="v5-projects-section">
+    <div className="v5-projects-head">
+      <span>03 / PROJECTS</span>
+      <h2>Three projects,<br/><em>three kinds of proof.</em></h2>
+      <p>Each project shows a different side of Dinesh’s work: reusable mobile systems, earlier full-stack builder foundations, and current 3D/AI experimentation.</p>
+    </div>
+    <div className="v5-projects-stack">
+      <AppBuilderProject/>
+      <WebBuilderProject/>
+      <EditspaceProject/>
+    </div>
+    <div className="v5-projects-rule"><MousePointer2 size={13}/><span>Each preview is interactive, but the project story stays readable first.</span></div>
+  </section>;
+}
