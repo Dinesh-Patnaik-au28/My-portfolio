@@ -1,0 +1,7 @@
+"use client";
+
+import {useState} from "react";
+const layers=[
+  ["MOBILE UI","React Native / Expo"],["STATE","Zustand"],["REUSABLE MODULES","Shared components / packages"],["API","Application integration"],["APPLICATION","Configured product"],["BUILD","Expo application builds"],["STORE","Google Play / Apple App Store"],
+];
+export default function ArchitectureGraph(){const [active,setActive]=useState(2);return <div className="v5-architecture"><div className="v5-arch-stage">{layers.map(([name,detail],index)=><button key={name} className={`${index===active?"active":""} ${Math.abs(index-active)===1?"near":""}`} onMouseEnter={()=>setActive(index)} onFocus={()=>setActive(index)}><span>0{index+1}</span><b>{name}</b><small>{detail}</small><i/></button>)}</div><aside><span>ACTIVE LAYER / 0{active+1}</span><h3>{layers[active][0]}</h3><p>{active===0?"The product surface customers interact with.":active===1?"Application state keeps the UI aligned with product flow.":active===2?"Reusable packages let product capabilities move across applications.":active===3?"APIs connect the product flow to application data.":active===4?"Modules resolve into a configured mobile product.":active===5?"Application builds turn the product into a releasable artifact.":"Release work reaches both mobile store ecosystems."}</p><div>{layers.map((layer,index)=><i key={layer[0]} className={index<=active?"active":""}/>)}</div></aside></div>}
